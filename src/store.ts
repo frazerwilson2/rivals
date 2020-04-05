@@ -1,4 +1,4 @@
-import gameData from '../../lambda/src/types/gameData';
+import gameData from './types/gameData';
 export type stateType = {
     thing:string,
     gameData: gameData
