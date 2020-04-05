@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { GraphQLClient } from "graphql-request";
 import './App.css';
 import {stateType} from './store';
-import gameData from '../../lambda/src/types/gameData';
+import gameData from './types/gameData';
 import {planCompetitor} from '../../lambda/src/types/competitor';
 import League from './League';
 import Calendar from './Calendar';

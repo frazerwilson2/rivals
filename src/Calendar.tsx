@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {League} from '../../lambda/src/types/gameData';
+import {League} from './types/gameData';
 type Calendar = {
     [day:string]: {planned: string[], logged: string[]}
 }

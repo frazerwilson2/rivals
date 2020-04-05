@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {League} from '../../lambda/src/types/gameData';
+import {League} from './types/gameData';
 
 const LeagueComp = ({league}:{league:League}) => {
   return (
