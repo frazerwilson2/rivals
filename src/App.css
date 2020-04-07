@@ -1,53 +1,25 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .league-table {
   display: grid;
-  grid-template-columns: 80% minmax(120px, 1fr) minmax(120px, 1fr);
-  width: 600px;
+  grid-template-columns: 60% minmax(120px, 1fr) minmax(120px, 1fr);
+  width: 250px;
+}
+@media(min-width: 800px){
+  .league-table {
+    width: 600px;
+    grid-template-columns: 80% minmax(120px, 1fr) minmax(120px, 1fr);
+  }
 }
 
 .league {
-  margin: auto;
-  width: 720px;
   display: flex;
   flex-direction: column;
+  width: 250px;
+}
+@media(min-width: 800px){
+  .league {
+    margin: auto;
+    width: 720px;
+  }
 }
 
 .league-label {
@@ -60,9 +32,15 @@
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-  font-size: 24px;
+  font-size: 16px;
   padding: 0 10px;
   color: #3058b2;
+}
+
+@media(min-width: 800px){
+  .league-cell {
+    font-size: 24px;
+  }
 }
 
 .league-img {
@@ -82,6 +60,15 @@
   background: #def3ff;
   margin: 20px 0;
   grid-gap: 5px;
+}
+
+@media(max-width: 800px){
+  .calendar {
+    display: block;
+  }
+  .calendar .day:not(.today) {
+    display: none;
+  }
 }
 
 .calendar ul {

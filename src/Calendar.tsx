@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {League} from './types/gameData';
 type Calendar = {
     [day:string]: {planned: string[], logged: string[]}
@@ -43,7 +43,7 @@ const CalendarComp = ({data}:{data:{[key:string]:League}}) => {
             return addAnotherDay(buildDays, dayIndex);
         }
         const daysBetweenResetAndToday = addAnotherDay([resetDay], Object.keys(calendarData).indexOf(resetDay));
-        return daysBetweenResetAndToday.includes(day);
+        return daysBetweenResetAndToday.includes(day) && day !== today;
     }
 
     const wrapNum = (num:number) => {
@@ -64,18 +64,18 @@ const CalendarComp = ({data}:{data:{[key:string]:League}}) => {
                 })
             }
 
-            const logList = Object.keys(competitor.logged_days);
+            // const logList = Object.keys(competitor.logged_days);
             
-            if(logList.length){
-                logList.forEach(tday => {
-                    const [, day] = tday.split('ON');
-                        if(goneOrComing(competitor.reset_day, day)){
-                            calendarData[day].logged.push(
-                                `${league.name.substring(league.name.length - 1)}: ${competitor.name} ran ${wrapNum(competitor.logged_days[tday])}`
-                            );
-                        }
-                })
-            }
+            // if(logList.length){
+            //     logList.forEach(tday => {
+            //         const [, day] = tday.split('ON');
+            //             if(goneOrComing(competitor.reset_day, day)){
+            //                 calendarData[day].logged.push(
+            //                     `${league.name.substring(league.name.length - 1)}: ${competitor.name} ran ${wrapNum(competitor.logged_days[tday])}`
+            //                 );
+            //             }
+            //     })
+            // }
         })
     })
 
