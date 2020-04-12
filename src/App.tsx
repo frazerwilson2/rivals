@@ -17,7 +17,8 @@ import Calendar from './Calendar';
       game(id: "${gameId}"
       ){
         week,
-        gameData
+        gameData,
+        logRecord
       }
     }
   `;
@@ -93,21 +94,46 @@ const logDistance = ()=>{
     <div className="">
       <header className="">
       <h1>
-        Dummy Rivals - Week {props.week}
+        Week {props.week}
       </h1>
-      <div>
-        Actions: 
+      <div className="actions">
+        Actions:
         <button onClick={props.makeASandwichWithSecretSauce}>refresh data</button>
-        <button onClick={showForm}>log data</button>
+        <button onClick={showForm}>log session</button>
       </div>
       </header>
 
-      <Calendar data={props.leagues} />
+<div className={`container ${logFormOpen ? "show-form" : ""}`}>
 
-      {logFormOpen ? (
-        <div>
+    <div className="center">
+        <div className="leaders">
+          {Object.keys(props.leagues).map(lg=>{
+            const league = props.leagues[lg];
+            return (
+              <div>
+                <img src={league.competitors[0].img} alt={league.competitors[0].name}/>
+                {league.name}<br/>
+                {league.competitors[0].name}
+              </div>
+              );
+          })}
+        </div>
+
+        {Object.keys(props.leagues).map(lg=>{
+          const league = props.leagues[lg];
+          const sortedLeague = Object.assign({}, league, {competitors: sortLeagueStandings(league.competitors)})
+          return <League league={sortedLeague} key={league.name} />;
+        })}
+        
+        <Calendar data={props.leagues} />
+    </div>
+
+  <div className="info">
+  <div>
+          <h2>Log Distance</h2>
           <label htmlFor="distance">Distance</label>
           <input type="text" value={distance} onChange={(e)=>{setDistance(e.target.value)}} />
+          <label htmlFor="day">Day</label>
           <select name="day" id="dat" value={setDay} onChange={(e)=>{setSetDay(e.target.value)}}>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
@@ -119,17 +145,7 @@ const logDistance = ()=>{
           </select>
           <button onClick={logDistance}>Submit</button>
         </div>
-      ): null }
-
-<div className="container">
-  <div className="center">
-      {Object.keys(props.leagues).map(lg=>{
-        const league = props.leagues[lg];
-        const sortedLeague = Object.assign({}, league, {competitors: sortLeagueStandings(league.competitors)})
-        return <League league={sortedLeague} key={league.name} />;
-      })}
   </div>
-  <div className="info"></div>
 </div>
     </div>
   );

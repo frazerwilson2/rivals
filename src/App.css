@@ -1,3 +1,32 @@
+body {
+  background: hsl(202, 100%, 98%);
+}
+
+header {
+  margin: 10px;
+}
+
+.actions * {
+  margin: 0 5px;
+}
+
+.leaders {
+  display: grid;
+  grid-gap: 10px;
+  max-width: 800px;
+  margin: auto;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.leaders > div {
+  text-align: center;
+}
+
+.leaders > div img {
+  width: 100%;
+  margin: 20px 0;
+}
+
 .league-table {
   display: grid;
   grid-template-columns: 60% minmax(120px, 1fr) minmax(120px, 1fr);
@@ -17,9 +46,14 @@
 }
 @media(min-width: 800px){
   .league {
-    margin: auto;
+    margin: 50px auto;
     width: 720px;
   }
+}
+
+.league-icon {
+  float: left;
+  margin-right: 20px;
 }
 
 .league-label {
@@ -27,7 +61,7 @@
 }
 
 .league-cell {
-  background: linear-gradient(to bottom, hsla(0, 0%, 98%, 1) 38%, hsla(232, 32%, 95%, 1) 10%, hsla(231, 11%, 91%, 1) 50%);
+  background: linear-gradient(to bottom, hsla(0, 0%, 98%, 1) 20%, hsla(232, 32%, 94%, 1) 38%, hsl(213, 18%, 89%) 45%);
   height: 50px;
   display: flex;
   align-items: center;
@@ -35,6 +69,8 @@
   font-size: 16px;
   padding: 0 10px;
   color: #3058b2;
+  border: 1px #e4e4e4 solid;
+  border-width: 1px 0;
 }
 
 @media(min-width: 800px){
@@ -50,7 +86,25 @@
 }
 
 .container {
-  background: hsla(218, 100%, 94%, 1);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.container.show-form {
+  grid-template-columns: 1fr 1fr;
+}
+
+.container.show-form .info {
+  display: block;
+}
+
+.info {
+  display: none;
+  padding: 15px;
+}
+
+.info label, .info select {
+  display: block;
 }
 
 .calendar {

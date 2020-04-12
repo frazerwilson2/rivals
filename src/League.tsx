@@ -5,7 +5,7 @@ const LeagueComp = ({league}:{league:League}) => {
   return (
     <div className="league">
         <h2>
-            <img src={`./lg${league.name.substring(league.name.length - 1)}.png`} /> {league.name}
+            <img className="league-icon" src={`./lg${league.name.substring(league.name.length - 1)}.png`} /> {league.name}
         </h2>
         <div className="league-table">
             <div className="league-cell league-label">Name</div>
