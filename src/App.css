@@ -4,10 +4,30 @@ body {
 
 header {
   margin: 10px;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.remaining-days {
+  font-size: 0.5em;
 }
 
 .actions * {
   margin: 0 5px;
+}
+
+.recent-log {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.recent-log h2 {
+  font-size: 1.62em;
+}
+
+.recent-log li {
+  font-size: 1.2em;
+  margin: 0;
 }
 
 .leaders {
@@ -25,6 +45,12 @@ header {
 .leaders > div img {
   width: 100%;
   margin: 20px 0;
+}
+
+.leaders .league-icon {
+  width: 30px;
+  float: left;
+  margin: 10px 0;
 }
 
 .league-table {
@@ -162,6 +188,6 @@ header {
 }
 
 .calendar .planned {
-  opacity: 0.6;
+  /* opacity: 0.6; */
 }
 /* .calendar .coming .logged */

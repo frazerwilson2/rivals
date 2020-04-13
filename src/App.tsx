@@ -10,7 +10,8 @@ import League from './League';
 import Calendar from './Calendar';
 
   const ENDPOINT = `https://api.8base.com/ck54bkug3000208l48z0k2ppy`;
-  const gameId = "ck8950ur800p908mj3nso2ksh";
+  // const gameId = "ck8950ur800p908mj3nso2ksh";
+  const [, gameId] = window.location.search.split('=');  
 
   const GET_LATEST = `
   query getGame{
@@ -46,7 +47,7 @@ function App({...props}) {
   }, []);
 
   useEffect(()=>{
-  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues}));
+  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues, logRecord: props.log}));
   }, [props.leagues]);
 
   const sortLeagueStandings = (competitors:planCompetitor[]):planCompetitor[] => {
@@ -58,7 +59,7 @@ function App({...props}) {
 }
 
 const showForm = ()=>{
-  setLogFormOpen(true);
+  setLogFormOpen(!logFormOpen);
 }
 
 function makeid(length:number = 5) {
@@ -82,22 +83,25 @@ const logDistance = ()=>{
     },
     body: JSON.stringify({
         day: dayTag,
-        distance: parseFloat(distance)
+        distance: parseFloat(distance),
+        gameId: gameId
     })
   }).then(()=>{
     props.makeASandwichWithSecretSauce();
     setDistance('0');
   });
 }
+
+const dayMap = [5, 4, 3, 2, 1, 0, 6];
+const daysRemaining = ((props.week - 2) * 7) + dayMap[new Date().getDay()]
   
   return (
     <div className="">
       <header className="">
       <h1>
-        Week {props.week}
+        Week {props.week} <span className="remaining-days">({daysRemaining} days remaining)</span>
       </h1>
       <div className="actions">
-        Actions:
         <button onClick={props.makeASandwichWithSecretSauce}>refresh data</button>
         <button onClick={showForm}>log session</button>
       </div>
@@ -112,12 +116,22 @@ const logDistance = ()=>{
             return (
               <div>
                 <img src={league.competitors[0].img} alt={league.competitors[0].name}/>
+                <img className="league-icon" src={`./lg${league.name.substring(league.name.length - 1)}.png`} />
                 {league.name}<br/>
                 {league.competitors[0].name}
               </div>
               );
           })}
         </div>
+
+      {props.log.length && (
+        <div className="recent-log">
+          <h2>Latest updates:</h2>
+          <ul>
+            {props.log.split(',').map((msg:string)=><li>{msg.split(':')[1]}</li>)}
+          </ul>
+        </div>
+      )}
 
         {Object.keys(props.leagues).map(lg=>{
           const league = props.leagues[lg];
@@ -161,14 +175,15 @@ function fetchSecretSauce() {
 }
 
 const selectors = {
-  getThing: (state:stateType)=>state.thing,
   getLeagues: (state:stateType)=>state.gameData.gameData,
+  getLog: (state:stateType)=>state.gameData.logRecord,
   getWeek: (state:stateType)=>state.gameData.week
 }
 
 const mapStateToProps = (state:stateType) => {
   return {
     leagues: selectors.getLeagues(state),
+    log: selectors.getLog(state),
     week: selectors.getWeek(state),
   }
 }

@@ -15,7 +15,8 @@ type gameData = {
     week: number,
     gameData: {
         [league: string]: League
-    }
+    },
+    logRecord: string
 }
 
 export default gameData;

@@ -1,12 +1,10 @@
 import gameData from './types/gameData';
 export type stateType = {
-    thing:string,
     gameData: gameData
 };
 
 const initialState:stateType = {
-    thing: 'default',
-    gameData: {week:0, gameData: {}}
+    gameData: {week:0, gameData: {}, logRecord: ''}
 }
 
 export default (state = initialState, action:{type:string,payload:any}) => {
