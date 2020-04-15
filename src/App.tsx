@@ -74,6 +74,7 @@ function makeid(length:number = 5) {
 
 const logDistance = ()=>{
   const dayTag:string = makeid(5) + 'ON' + setDay;  
+  props.updateLoading(true);
   fetch('https://e2043eb2x7.execute-api.us-east-1.amazonaws.com/default/dummyrivals-dev-logSession', {
     method: 'POST',
     mode: 'no-cors',
@@ -89,27 +90,35 @@ const logDistance = ()=>{
   }).then(()=>{
     props.makeASandwichWithSecretSauce();
     setDistance('0');
+    showForm();
   });
 }
 
-const dayMap = [5, 4, 3, 2, 1, 0, 6];
-const daysRemaining = ((props.week - 2) * 7) + dayMap[new Date().getDay()]
-  
+const dayMap = [2, 3, 4, 5, 6, 0, 1];
+const daysRemaining = 42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])
+
   return (
-    <div className="">
+    <div className={props.loading ? 'loading': ''}>
       <header className="">
       <h1>
         Week {props.week} <span className="remaining-days">({daysRemaining} days remaining)</span>
       </h1>
       <div className="actions">
-        <button onClick={props.makeASandwichWithSecretSauce}>refresh data</button>
-        <button onClick={showForm}>log session</button>
+        <button onClick={props.makeASandwichWithSecretSauce}>
+          <img src="./refresh.png" alt=""/>
+          refresh data
+          </button>
+        <button onClick={showForm}>
+        <img src="./running.png" alt=""/>
+          log session
+        </button>
       </div>
       </header>
 
 <div className={`container ${logFormOpen ? "show-form" : ""}`}>
 
     <div className="center">
+      <div className="headline">
         <div className="leaders">
           {Object.keys(props.leagues).map(lg=>{
             const league = props.leagues[lg];
@@ -123,15 +132,14 @@ const daysRemaining = ((props.week - 2) * 7) + dayMap[new Date().getDay()]
               );
           })}
         </div>
-
-      {props.log.length && (
         <div className="recent-log">
           <h2>Latest updates:</h2>
           <ul>
             {props.log.split(',').map((msg:string)=><li>{msg.split(':')[1]}</li>)}
           </ul>
         </div>
-      )}
+      </div>
+
 
         {Object.keys(props.leagues).map(lg=>{
           const league = props.leagues[lg];
@@ -139,7 +147,6 @@ const daysRemaining = ((props.week - 2) * 7) + dayMap[new Date().getDay()]
           return <League league={sortedLeague} key={league.name} />;
         })}
         
-        <Calendar data={props.leagues} />
     </div>
 
   <div className="info">
@@ -160,7 +167,9 @@ const daysRemaining = ((props.week - 2) * 7) + dayMap[new Date().getDay()]
           <button onClick={logDistance}>Submit</button>
         </div>
   </div>
+
 </div>
+    <Calendar data={props.leagues} />
     </div>
   );
 }
@@ -177,7 +186,8 @@ function fetchSecretSauce() {
 const selectors = {
   getLeagues: (state:stateType)=>state.gameData.gameData,
   getLog: (state:stateType)=>state.gameData.logRecord,
-  getWeek: (state:stateType)=>state.gameData.week
+  getWeek: (state:stateType)=>state.gameData.week,
+  getLoading: (state:stateType)=>state.loading
 }
 
 const mapStateToProps = (state:stateType) => {
@@ -185,22 +195,27 @@ const mapStateToProps = (state:stateType) => {
     leagues: selectors.getLeagues(state),
     log: selectors.getLog(state),
     week: selectors.getWeek(state),
+    loading: selectors.getLoading(state)
   }
 }
 
 const actions = {
-  updateData: (data:gameData)=>({type:'ADDDATA', payload: data})
+  updateData: (data:gameData)=>({type:'ADDDATA', payload: data}),
+  setLoading: (setting:boolean)=>({type:'LOADING', payload: setting})
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<{type:string}>) =>
   bindActionCreators(
     {
       updateData: data => actions.updateData(data),
+      updateLoading: loading => actions.setLoading(loading),
       makeASandwichWithSecretSauce: () =>{        
         return (dispatch:Dispatch) => {
+          dispatch(actions.setLoading(true));
           return fetchSecretSauce().then(
             (sauce:{game:gameData}) => {
               dispatch(actions.updateData(sauce.game))
+              dispatch(actions.setLoading(false));
             },
             (error) => {console.log(error);},
           );

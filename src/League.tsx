@@ -11,18 +11,18 @@ const LeagueComp = ({league}:{league:League}) => {
             <div className="league-cell league-label">Name</div>
             <div className="league-cell league-label">Sessions</div>
             <div className="league-cell league-label">Distance</div>
-            {league.competitors.map(competitor => {
+            {league.competitors.map((competitor, i) => {
                 const loggedDays = Object.values(competitor.logged_days);
                 const total = Math.round(loggedDays.reduce((a:any, b:any) => a + b, 0) * 100) / 100;
                 return (
                     <React.Fragment key={competitor.name}>
-                        <div className="league-cell">
+                        <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>
                             <img className="league-img" src={competitor.img} alt=""/>
                             {competitor.name}
                             {` (${competitor.nation.slice(0,3).toUpperCase()})`}
                         </div>
-                        <div className="league-cell">{loggedDays.length}</div>
-                        <div className="league-cell">{total}</div>
+                        <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>{loggedDays.length}</div>
+                        <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>{total}</div>
                     </React.Fragment>
                     );
             })}
