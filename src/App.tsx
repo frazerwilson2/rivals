@@ -95,7 +95,7 @@ const logDistance = ()=>{
 }
 
 const dayMap = [2, 3, 4, 5, 6, 0, 1];
-const daysRemaining = 42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])
+const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getHours() < 18 ? 7 : 0);
 
   return (
     <div className={props.loading ? 'loading': ''}>
@@ -134,17 +134,31 @@ const daysRemaining = 42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()]
         </div>
         <div className="recent-log">
           <h2>Latest updates:</h2>
-          <ul>
-            {props.log.split(',').map((msg:string)=><li>{msg.split(':')[1]}</li>)}
-          </ul>
+          {props.log && props.log.length && (
+            <ul>
+              {props.log.split(',').map((msg:string)=><li>{msg.split(':')[1]}</li>)}
+            </ul>
+          )}
         </div>
       </div>
 
 
-        {Object.keys(props.leagues).map(lg=>{
+    <div className="select-league">
+    {Object.keys(props.leagues).map((lg, i)=>{
+      const league = props.leagues[lg];
+      return <img 
+          onClick={()=>props.setLeague(i+1)}
+          className={`league-display-icon ${(i + 1) === props.showLeague ? 'active':''}`} 
+          src={`./lg${league.name.substring(league.name.length - 1)}.png`} 
+        />
+    })}
+    </div>
+
+
+        {Object.keys(props.leagues).map((lg, i)=>{
           const league = props.leagues[lg];
           const sortedLeague = Object.assign({}, league, {competitors: sortLeagueStandings(league.competitors)})
-          return <League league={sortedLeague} key={league.name} />;
+          return (i + 1) === props.showLeague ? <League league={sortedLeague} key={league.name} /> : null;
         })}
         
     </div>
@@ -187,7 +201,8 @@ const selectors = {
   getLeagues: (state:stateType)=>state.gameData.gameData,
   getLog: (state:stateType)=>state.gameData.logRecord,
   getWeek: (state:stateType)=>state.gameData.week,
-  getLoading: (state:stateType)=>state.loading
+  getLoading: (state:stateType)=>state.loading,
+  showingLeague: (state:stateType)=>state.showLeague
 }
 
 const mapStateToProps = (state:stateType) => {
@@ -195,13 +210,15 @@ const mapStateToProps = (state:stateType) => {
     leagues: selectors.getLeagues(state),
     log: selectors.getLog(state),
     week: selectors.getWeek(state),
-    loading: selectors.getLoading(state)
+    loading: selectors.getLoading(state),
+    showLeague: selectors.showingLeague(state)
   }
 }
 
 const actions = {
   updateData: (data:gameData)=>({type:'ADDDATA', payload: data}),
-  setLoading: (setting:boolean)=>({type:'LOADING', payload: setting})
+  setLoading: (setting:boolean)=>({type:'LOADING', payload: setting}),
+  setLeague: (league:number)=>({type:'SETLEAGUE', payload: league})
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<{type:string}>) =>
@@ -209,6 +226,7 @@ const mapDispatchToProps = (dispatch: Dispatch<{type:string}>) =>
     {
       updateData: data => actions.updateData(data),
       updateLoading: loading => actions.setLoading(loading),
+      setLeague: league => actions.setLeague(league),
       makeASandwichWithSecretSauce: () =>{        
         return (dispatch:Dispatch) => {
           dispatch(actions.setLoading(true));

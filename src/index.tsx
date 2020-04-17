@@ -11,7 +11,7 @@ import myReducer from './store';
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 let store = createStore(myReducer, applyMiddleware(thunk));
-store.subscribe(() => console.log(store.getState()));
+// store.subscribe(() => console.log(store.getState()));
 
 ReactDOM.render(
   <React.StrictMode>

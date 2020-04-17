@@ -114,6 +114,25 @@ h1 {
   margin: 10px 0;
 }
 
+.select-league {
+  text-align: center;
+  margin: 30px 0 0;
+}
+
+.select-league .league-display-icon {
+  width: 50px;
+  border: 2px transparent solid;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 1px;
+  margin: 0 10px;
+}
+
+.select-league .league-display-icon.active {
+  border: 2px rgba(178, 214, 232, 0.7) solid;
+  box-shadow: 0 0 10px 0px white;
+}
+
 .league-table {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -129,7 +148,7 @@ h1 {
 .league {
   display: flex;
   flex-direction: column;
-  margin: 50px 0;
+  margin: 30px auto 50px;
 }
 @media(min-width: 800px){
   .league {

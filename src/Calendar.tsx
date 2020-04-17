@@ -79,9 +79,6 @@ const CalendarComp = ({data}:{data:{[key:string]:League}}) => {
         })
     })
 
-    console.log(calendarData);
-    
-
     return (
         <div className="calendar">
             {Object.keys(calendarData).map(day => {
