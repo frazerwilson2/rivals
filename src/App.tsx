@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { GraphQLClient } from "graphql-request";
 import './App.css';
 import {stateType} from './store';
-import gameData from './types/gameData';
+import gameData, {gameCompetitor} from './types/gameData';
 import {planCompetitor} from './types/competitor';
-import League from './League';
+import LeagueComp from './League';
 import Calendar from './Calendar';
 
   const ENDPOINT = `https://api.8base.com/ck54bkug3000208l48z0k2ppy`;
@@ -33,6 +33,8 @@ import Calendar from './Calendar';
 function App({...props}) {
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const [logFormOpen, setLogFormOpen] = useState(false);
+  const [infoWindow, setInfoWindow] = useState(false);
+  const [profileDeets, setProfileDeets] = useState(null);
   const [setDay, setSetDay] = useState(days[new Date().getDay()]);
   const [distance, setDistance] = useState('0');
 
@@ -94,6 +96,39 @@ const logDistance = ()=>{
   });
 }
 
+const profileSelected = (id:string)=>{
+  console.log(id);
+  const competitorList = Object.values(props.leagues).reduce((acc:any[], curr:any)=>{
+    return [...acc, ...curr.competitors];
+}, []);
+const theProfile = competitorList.find(c => c.id === id);
+// console.log(theProfile);
+setInfoWindow(true);
+setProfileDeets(theProfile);
+}
+
+const toggleProfile = ()=>{
+  setInfoWindow(false);
+}
+
+const renderProfileDeets = (profile:planCompetitor)=>{
+  const grandTotal = Object.values(profile.logged_days).reduce((acc:number, log:any)=>{
+    return acc + log;
+  }, 0);
+  const allTimeTotal = Math.round(grandTotal * 100) / 100 + profile.lifeTotal;
+  return (
+    <div>
+      <a onClick={toggleProfile}><img className="close" src="/close.svg" alt=""/></a>
+      <img src={profile.img} alt=""/>
+      <p>Name: {profile.name}</p>
+      <p>Nation: {profile.nation}</p>
+      <p>Best run day: {profile.preferred_day}</p>
+      <p>All time Total: {allTimeTotal}</p>
+  <p>Awards: <ul>{profile.awards.map(a=><li>{a}</li>)}</ul></p>
+    </div>
+  )
+}
+
 const dayMap = [2, 3, 4, 5, 6, 0, 1];
 const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getHours() < 18 ? 7 : 0);
 
@@ -142,6 +177,10 @@ const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()
         </div>
       </div>
 
+<div className={`league-display ${infoWindow ? 'show-info-window' : ''}`}>
+    <div className="profile-window">
+      {profileDeets && renderProfileDeets(profileDeets!)}
+    </div>
 
     <div className="select-league">
     {Object.keys(props.leagues).map((lg, i)=>{
@@ -158,8 +197,10 @@ const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()
         {Object.keys(props.leagues).map((lg, i)=>{
           const league = props.leagues[lg];
           const sortedLeague = Object.assign({}, league, {competitors: sortLeagueStandings(league.competitors)})
-          return (i + 1) === props.showLeague ? <League league={sortedLeague} key={league.name} /> : null;
+          return (i + 1) === props.showLeague ? 
+            <LeagueComp league={sortedLeague} key={league.name} selectProfile={profileSelected} /> : null;
         })}
+</div>
         
     </div>
 

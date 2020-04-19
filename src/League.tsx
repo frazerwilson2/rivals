@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {League} from './types/gameData';
 
-const LeagueComp = ({league}:{league:League}) => {
+const LeagueComp = ({league, selectProfile}:{league:League, selectProfile:(id:string)=>void}) => {
   return (
     <div className="league">
         <h2>
@@ -18,7 +18,7 @@ const LeagueComp = ({league}:{league:League}) => {
                     <React.Fragment key={competitor.name}>
                         <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>
                             <img className="league-img" src={competitor.img} alt=""/>
-                            {competitor.name}
+                            <a onClick={()=>{selectProfile(competitor.id)}}>{competitor.name}</a>
                             {` (${competitor.nation.slice(0,3).toUpperCase()})`}
                         </div>
                         <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>{loggedDays.length}</div>

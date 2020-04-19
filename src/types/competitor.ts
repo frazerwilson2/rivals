@@ -7,6 +7,7 @@ type competitor = {
     preferred_day: string;
     reset_day: string;
     type: string;
+    lifeTotal: number;
 }
 
 export interface planCompetitor extends competitor {

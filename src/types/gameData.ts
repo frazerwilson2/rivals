@@ -1,6 +1,6 @@
 import competitor from './competitor';
 
-interface gameCompetitor extends competitor {
+export interface gameCompetitor extends competitor {
     id: string;
     planned_days: string[], 
     logged_days: string[]
