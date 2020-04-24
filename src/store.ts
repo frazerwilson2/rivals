@@ -7,7 +7,7 @@ export type stateType = {
 
 const initialState:stateType = {
     loading: false,
-    gameData: {week:0, gameData: {}, logRecord: ''},
+    gameData: {week:0, gameData: {}, logRecord: '', news: []},
     showLeague: 1
 }
 

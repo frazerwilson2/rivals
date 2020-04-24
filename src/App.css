@@ -5,6 +5,10 @@ body {
   color: white;
 }
 
+a {
+  cursor: pointer;
+}
+
 .loading:before {
   content: '';
   width: 100%;
@@ -81,6 +85,24 @@ h1 {
   color: #666;
 }
 
+.recent-log-list {
+  max-height: 220px;
+  overflow: auto;
+}
+
+.recent-log-list li {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.recent-log-list li img {
+  width: 16px;
+  position: relative;
+  top: 5px;
+  margin-right: 6px;
+}
+
 .recent-log h2 {
   font-size: 1.4em;
   margin: 20px 0;
@@ -89,6 +111,23 @@ h1 {
 .recent-log li {
   font-size: 1em;
   margin: 0;
+}
+
+.news-modal {
+  position: fixed;
+  background: white;
+  color: grey;
+  z-index: 2;
+  margin-left: 30vw;
+  width: 40vw;
+  min-width: 300px;
+  padding: 30px;
+  box-shadow: 0 0 10px 600px #0000006b;
+}
+
+.news-modal .close {
+  width: 20px;
+  float: right;
 }
 
 .leaders {
@@ -160,6 +199,14 @@ h1 {
 .league-icon {
   float: left;
   margin-right: 20px;
+}
+
+.winner-league-icon {
+  width: 15px;
+  float: left;
+  position: relative;
+  top: 5px;
+  left: 10px;
 }
 
 .league-label {

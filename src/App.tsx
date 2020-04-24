@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { GraphQLClient } from "graphql-request";
 import './App.css';
 import {stateType} from './store';
-import gameData, {gameCompetitor} from './types/gameData';
+import gameData, {gameCompetitor, NewsItem} from './types/gameData';
 import {planCompetitor} from './types/competitor';
 import LeagueComp from './League';
 import Calendar from './Calendar';
@@ -19,7 +19,8 @@ import Calendar from './Calendar';
       ){
         week,
         gameData,
-        logRecord
+        logRecord,
+        news
       }
     }
   `;
@@ -37,6 +38,7 @@ function App({...props}) {
   const [profileDeets, setProfileDeets] = useState(null);
   const [setDay, setSetDay] = useState(days[new Date().getDay()]);
   const [distance, setDistance] = useState('0');
+  const newsModalState:[NewsItem|null, any] = useState(null);
 
   useEffect(()=>{
     const localData = localStorage.getItem('dummyRivalData');
@@ -49,7 +51,7 @@ function App({...props}) {
   }, []);
 
   useEffect(()=>{
-  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues, logRecord: props.log}));
+  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues, logRecord: props.log, news: props.news}));
   }, [props.leagues]);
 
   const sortLeagueStandings = (competitors:planCompetitor[]):planCompetitor[] => {
@@ -97,12 +99,10 @@ const logDistance = ()=>{
 }
 
 const profileSelected = (id:string)=>{
-  console.log(id);
   const competitorList = Object.values(props.leagues).reduce((acc:any[], curr:any)=>{
     return [...acc, ...curr.competitors];
 }, []);
 const theProfile = competitorList.find(c => c.id === id);
-// console.log(theProfile);
 setInfoWindow(true);
 setProfileDeets(theProfile);
 }
@@ -124,13 +124,21 @@ const renderProfileDeets = (profile:planCompetitor)=>{
       <p>Nation: {profile.nation}</p>
       <p>Best run day: {profile.preferred_day}</p>
       <p>All time Total: {allTimeTotal}</p>
-  <p>Awards: <ul>{profile.awards.map(a=><li>{a}</li>)}</ul></p>
+  <p>Awards: <ul>{profile.awards.map(a=>(
+      <li><img className="winner-league-icon" src={`./lg${a[7]}.png`} /> {a}</li>
+    ))}</ul></p>
     </div>
   )
 }
 
+const showNews = (news:NewsItem) => {
+  console.log(news);
+  newsModalState[1](news);
+}
+
 const dayMap = [2, 3, 4, 5, 6, 0, 1];
-const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getHours() < 18 ? 7 : 0);
+const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getDay() === 5 && new Date().getHours() < 18 ? 7 : 0);
+const theNews:NewsItem[] = Object.values(props.news);
 
   return (
     <div className={props.loading ? 'loading': ''}>
@@ -149,6 +157,13 @@ const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()
         </button>
       </div>
       </header>
+
+      {newsModalState[0] !== null && (
+      <div className="news-modal">
+        <a onClick={()=>{newsModalState[1](null)}}><img className="close" src="/close-dark.svg" alt=""/></a>
+        <h2>{newsModalState[0].title}</h2>
+        <p>{newsModalState[0].content}</p>
+      </div>)}
 
 <div className={`container ${logFormOpen ? "show-form" : ""}`}>
 
@@ -170,7 +185,12 @@ const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()
         <div className="recent-log">
           <h2>Latest updates:</h2>
           {props.log && props.log.length && (
-            <ul>
+            <ul className="recent-log-list">
+              {props.news && theNews.length && theNews.map((news:NewsItem) => (
+                <li>{news.type === 'winner' && <img src="/cup.svg" />}
+                  {news.content.length ? (<a onClick={()=>{showNews(news)}}>{news.title}</a>) : news.title}
+                </li>
+              ))}
               {props.log.split(',').map((msg:string)=><li>{msg.split(':')[1]}</li>)}
             </ul>
           )}
@@ -241,6 +261,7 @@ function fetchSecretSauce() {
 const selectors = {
   getLeagues: (state:stateType)=>state.gameData.gameData,
   getLog: (state:stateType)=>state.gameData.logRecord,
+  getNews: (state:stateType)=>state.gameData.news,
   getWeek: (state:stateType)=>state.gameData.week,
   getLoading: (state:stateType)=>state.loading,
   showingLeague: (state:stateType)=>state.showLeague
@@ -250,6 +271,7 @@ const mapStateToProps = (state:stateType) => {
   return {
     leagues: selectors.getLeagues(state),
     log: selectors.getLog(state),
+    news: selectors.getNews(state),
     week: selectors.getWeek(state),
     loading: selectors.getLoading(state),
     showLeague: selectors.showingLeague(state)

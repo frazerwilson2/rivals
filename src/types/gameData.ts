@@ -5,6 +5,13 @@ export interface gameCompetitor extends competitor {
     planned_days: string[], 
     logged_days: string[]
 }
+export type NewsItem = {
+    id: string;
+    type: string;
+    title: string;
+    content: string;
+    popup: boolean;
+}
 
 export type League = {
     name: string;
@@ -16,7 +23,8 @@ type gameData = {
     gameData: {
         [league: string]: League
     },
-    logRecord: string
+    logRecord: string,
+    news: NewsItem[]
 }
 
 export default gameData;
