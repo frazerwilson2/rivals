@@ -18,13 +18,20 @@ export type League = {
     competitors: gameCompetitor[]
 }
 
+export type AllTimeRecords = {
+    seasonDistance: {name:string, value:number},
+    seasonSessions: {name:string, value:number},
+    singleDistance: {name:string, value:number}
+}
+
 type gameData = {
     week: number,
     gameData: {
         [league: string]: League
     },
     logRecord: string,
-    news: NewsItem[]
+    news: NewsItem[],
+    records: AllTimeRecords
 }
 
 export default gameData;

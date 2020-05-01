@@ -20,7 +20,8 @@ import Calendar from './Calendar';
         week,
         gameData,
         logRecord,
-        news
+        news,
+        records
       }
     }
   `;
@@ -51,7 +52,7 @@ function App({...props}) {
   }, []);
 
   useEffect(()=>{
-  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues, logRecord: props.log, news: props.news}));
+  localStorage.setItem('dummyRivalData', JSON.stringify({week: props.week, gameData: props.leagues, logRecord: props.log, news: props.news, records:props.records}));
   }, [props.leagues]);
 
   const sortLeagueStandings = (competitors:planCompetitor[]):planCompetitor[] => {
@@ -132,13 +133,25 @@ const renderProfileDeets = (profile:planCompetitor)=>{
 }
 
 const showNews = (news:NewsItem) => {
-  console.log(news);
+  // console.log(news);
   newsModalState[1](news);
 }
 
 const dayMap = [2, 3, 4, 5, 6, 0, 1];
 const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getDay() === 5 && new Date().getHours() < 18 ? 7 : 0);
 const theNews:NewsItem[] = Object.values(props.news);
+
+const renderRecords = ()=>{
+  const rc1 = props.records && props.records.singleDistance ? props.records.singleDistance : {name:'',value:0};
+  const rc2 = props.records && props.records.seasonSessions ? props.records.seasonSessions : {name:'',value:0};
+  const rc3 = props.records && props.records.seasonDistance ? props.records.seasonDistance : {name:'',value:0};
+return (<div className="record-area">
+  <h3>All Time records</h3>
+  <div><label>Single distance:</label> {rc1.name} ({rc1.value ? rc1.value : 'not set'})</div>
+  <div><label>Season distance:</label> {rc2.name} ({rc2.value ? rc2.value : 'not set'})</div>
+  <div><label>Season sessions:</label> {rc3.name} ({rc3.value ? rc3.value : 'not set'})</div>
+  </div>)
+}
 
   return (
     <div className={props.loading ? 'loading': ''}>
@@ -186,7 +199,7 @@ const theNews:NewsItem[] = Object.values(props.news);
           <h2>Latest updates:</h2>
           {props.log && props.log.length && (
             <ul className="recent-log-list">
-              {props.news && theNews.length && theNews.map((news:NewsItem) => (
+              {props.news && theNews.length > 0 && theNews.map((news:NewsItem) => (
                 <li>{news.type === 'winner' && <img src="/cup.svg" />}
                   {news.content.length ? (<a onClick={()=>{showNews(news)}}>{news.title}</a>) : news.title}
                 </li>
@@ -195,6 +208,7 @@ const theNews:NewsItem[] = Object.values(props.news);
             </ul>
           )}
         </div>
+        {renderRecords()}
       </div>
 
 <div className={`league-display ${infoWindow ? 'show-info-window' : ''}`}>
@@ -262,6 +276,7 @@ const selectors = {
   getLeagues: (state:stateType)=>state.gameData.gameData,
   getLog: (state:stateType)=>state.gameData.logRecord,
   getNews: (state:stateType)=>state.gameData.news,
+  getRecords: (state:stateType)=>state.gameData.records,
   getWeek: (state:stateType)=>state.gameData.week,
   getLoading: (state:stateType)=>state.loading,
   showingLeague: (state:stateType)=>state.showLeague
@@ -272,6 +287,7 @@ const mapStateToProps = (state:stateType) => {
     leagues: selectors.getLeagues(state),
     log: selectors.getLog(state),
     news: selectors.getNews(state),
+    records: selectors.getRecords(state),
     week: selectors.getWeek(state),
     loading: selectors.getLoading(state),
     showLeague: selectors.showingLeague(state)
