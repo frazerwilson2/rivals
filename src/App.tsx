@@ -141,15 +141,17 @@ const dayMap = [2, 3, 4, 5, 6, 0, 1];
 const daysRemaining = (42 - (((props.week - 1) * 7) + dayMap[new Date().getDay()])) - (new Date().getDay() === 5 && new Date().getHours() < 18 ? 7 : 0);
 const theNews:NewsItem[] = Object.values(props.news);
 
+const wrapNum =  (num:number) => Math.round(num * 100) / 100;
+
 const renderRecords = ()=>{
   const rc1 = props.records && props.records.singleDistance ? props.records.singleDistance : {name:'',value:0};
   const rc2 = props.records && props.records.seasonSessions ? props.records.seasonSessions : {name:'',value:0};
   const rc3 = props.records && props.records.seasonDistance ? props.records.seasonDistance : {name:'',value:0};
 return (<div className="record-area">
   <h3>All Time records</h3>
-  <div><label>Single distance:</label> {rc1.name} ({rc1.value ? rc1.value : 'not set'})</div>
-  <div><label>Season distance:</label> {rc2.name} ({rc2.value ? rc2.value : 'not set'})</div>
-  <div><label>Season sessions:</label> {rc3.name} ({rc3.value ? rc3.value : 'not set'})</div>
+  <div><label>Single distance:</label> {rc1.name} ({rc1.value ? wrapNum(rc1.value) : 'not set'})</div>
+  <div><label>Season distance:</label> {rc2.name} ({rc2.value ? wrapNum(rc2.value) : 'not set'})</div>
+  <div><label>Season sessions:</label> {rc3.name} ({rc3.value ? wrapNum(rc3.value) : 'not set'})</div>
   </div>)
 }
 

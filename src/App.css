@@ -43,8 +43,15 @@ header {
 .actions img {
   width: 22px;
   position: relative;
-  top: 7px;
-  margin-right: 10px;
+  top: 3px;
+  float: left;
+}
+@media(min-width: 800px){
+  .actions img {
+    margin-right: 10px;
+    top: 7px;
+    float: initial;
+  }
 }
 
 .actions * {
