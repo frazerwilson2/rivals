@@ -17,7 +17,7 @@ const LeagueComp = ({league, selectProfile}:{league:League, selectProfile:(id:st
                 return (
                     <React.Fragment key={competitor.name}>
                         <div className={`league-cell ${i == 0 ? 'first' : ''} ${i == 5 ? 'last' : ''}`}>
-                            <img className="league-img" src={competitor.img} alt=""/>
+                            <img onClick={()=>{selectProfile(competitor.id)}} className="league-img" src={competitor.img} alt=""/>
                             <a onClick={()=>{selectProfile(competitor.id)}}>{competitor.name}</a>
                             {` (${competitor.nation.slice(0,3).toUpperCase()})`}
                         </div>

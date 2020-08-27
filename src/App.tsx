@@ -116,7 +116,7 @@ const renderProfileDeets = (profile:planCompetitor)=>{
   const grandTotal = Object.values(profile.logged_days).reduce((acc:number, log:any)=>{
     return acc + log;
   }, 0);
-  const allTimeTotal = Math.round(grandTotal * 100) / 100 + profile.lifeTotal;
+  const allTimeTotal = Math.round(Math.round(grandTotal * 100) / 100 + profile.lifeTotal);
   return (
     <div>
       <a onClick={toggleProfile}><img className="close" src="/close.svg" alt=""/></a>

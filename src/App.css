@@ -294,7 +294,12 @@ h1 {
 }
 
 .league-display.show-info-window {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
+}
+
+.league-display.show-info-window .select-league,
+.league-display.show-info-window h2 {
+  display: none;
 }
 
 @media(min-width: 800px){
